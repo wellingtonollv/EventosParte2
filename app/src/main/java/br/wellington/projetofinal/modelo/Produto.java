@@ -5,12 +5,27 @@ import java.io.Serializable;
 import br.wellington.projetofinal.MainActivity;
 
 public class Produto implements Serializable {
+
+    private int id;
     private String nome;
     private Float valor;
+
+    public Produto(int id, String nome, Float valor) {
+        this.id = id;
+        this.nome = nome;
+        this.valor = valor;
+    }
 
     public Produto(String nome, Float valor) {
         this.nome = nome;
         this.valor = valor;
+    }
+
+    public int getId() {
+        return id;
+    }
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getNome() {
