@@ -8,7 +8,9 @@ import android.os.Bundle;
 import android.os.IInterface;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
+import br.wellington.projetofinal.database.ProdutoDAO;
 import br.wellington.projetofinal.modelo.Produto;
 
 public class CadastroProdutoActivity extends AppCompatActivity {
@@ -63,10 +65,14 @@ public class CadastroProdutoActivity extends AppCompatActivity {
             setResult(RESULT_CODE_PRODUTO_EDITADO,intent);
 
         }else {
-            intent.putExtra("novoProduto", produto);
-            setResult(RESULT_CODE_NOVO_PRODUTO, intent);
+            ProdutoDAO produtoDao = new ProdutoDAO(getBaseContext());
+            boolean salvou = produtoDao.salvar(produto);
+            if(salvou){
+                finish();
+            }else{
+                Toast.makeText(CadastroProdutoActivity.this, "Erro ao salvar !", Toast.LENGTH_LONG).show();
+            }
         }
-        finish();
     }
 
 

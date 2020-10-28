@@ -10,7 +10,7 @@ public class ProdutoContract {
         return "CREATE TABLE " + ProdutoEntity.TABLE_NAME + " (" +
                 ProdutoEntity._ID + " INTEGER PRIMARY KEY," +
                 ProdutoEntity.COLUMN_NAME_NOME + " TEXT," +
-                ProdutoEntity.COLUMN_NAME_VALOR + " REAL";
+                ProdutoEntity.COLUMN_NAME_VALOR + " REAL)";
     }
 
     public static final String removerTabela(){
