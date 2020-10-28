@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
+import br.wellington.projetofinal.database.ProdutoDAO;
 import br.wellington.projetofinal.modelo.Produto;
 
 public class MainActivity extends AppCompatActivity {
@@ -34,16 +35,20 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setTitle("Produtos");
-
         listViewProdutos = findViewById(R.id.listView_produtos);
         ArrayList<Produto> produtos = new ArrayList<Produto>();
 
-        adapterProdutos = new ArrayAdapter<Produto>(MainActivity.this, android.R.layout.simple_list_item_1, produtos);
-
-        listViewProdutos.setAdapter(adapterProdutos);
         definirOnClickListenerListView();
         definirOnLongClickListener();
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        ProdutoDAO produtoDao = new ProdutoDAO(getBaseContext());
+        adapterProdutos = new ArrayAdapter<Produto>(MainActivity.this, android.R.layout.simple_list_item_1, produtoDao.listar());
+        listViewProdutos.setAdapter(adapterProdutos);
     }
 
     private void definirOnLongClickListener(){
