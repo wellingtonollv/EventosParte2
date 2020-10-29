@@ -4,6 +4,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,15 +16,12 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
+
 import br.wellington.projetofinal.database.ProdutoDAO;
+import br.wellington.projetofinal.database.entity.ProdutoEntity;
 import br.wellington.projetofinal.modelo.Produto;
 
 public class MainActivity extends AppCompatActivity {
-
-    private final int REQUEST_CODE_NOVO_PRODUTO=1 ;
-    private final int RESULT_CODE_NOVO_PRODUTO=10;
-    private final int REQUEST_CODO_EDITAR_PRODUTO=2;
-    private final int RESULT_CODE_PRODUTO_EDITADO=11;
 
     private ListView listViewProdutos;
     private ArrayAdapter<Produto> adapterProdutos;
@@ -54,23 +52,30 @@ public class MainActivity extends AppCompatActivity {
     private void definirOnLongClickListener(){
         listViewProdutos.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+            public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, final long id) {
                 final Produto produtoClicado = adapterProdutos.getItem(position);
 
-                new AlertDialog.Builder(MainActivity.this)
-                        .setIcon((android.R.drawable.ic_delete))
-                        .setTitle("Excluir ?")
-                        .setMessage("Deseja excluir?")
-                        .setPositiveButton("Sim", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which){
-                                adapterProdutos.remove(produtoClicado);
-                                adapterProdutos.notifyDataSetChanged();
-                                Toast.makeText(MainActivity.this, "Produto Deletado",Toast.LENGTH_LONG).show();
-                            }
-                        })
-                        .setNegativeButton("Não",null).show();
-                 return true;
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                builder.setIcon((android.R.drawable.ic_delete));
+                builder.setTitle("Excluir ?");
+                builder.setMessage("Deseja excluir?");
+                builder.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        //DELETE
+                        ProdutoDAO produtoDao = new ProdutoDAO(getBaseContext());
+                        produtoDao.delete(produtoClicado.getId());
+
+                        //
+                        adapterProdutos.remove(produtoClicado);
+                        adapterProdutos.notifyDataSetChanged();
+                        Toast.makeText(MainActivity.this, "Produto Deletado", Toast.LENGTH_LONG).show();
+                    }
+                });
+                builder.setNegativeButton("Não", null);
+                builder.show();
+                return true;
             }
         });
     }
@@ -82,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
                 Produto produtoClicado = adapterProdutos.getItem(position);
                 Intent intent = new Intent(MainActivity.this, CadastroProdutoActivity.class);
                 intent.putExtra("produtoEdicao", produtoClicado);
-                startActivityForResult(intent, REQUEST_CODO_EDITAR_PRODUTO);
+                startActivity(intent);
             }
         });
     }
@@ -93,20 +98,4 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode==REQUEST_CODO_EDITAR_PRODUTO && resultCode==RESULT_CODE_PRODUTO_EDITADO){
-            Produto produtoEditado = (Produto)data.getExtras().getSerializable("produtoEditado");
-            for(int i =0; i < adapterProdutos.getCount(); i++){
-                Produto produto = adapterProdutos.getItem(i);
-                if(produto.getId() == produtoEditado.getId()){
-                    adapterProdutos.remove(produto);
-                    adapterProdutos.insert(produtoEditado,i);
-                    break;
-                }
-            }
-        }
-
-    }
 }
