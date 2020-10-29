@@ -63,10 +63,9 @@ public class MainActivity extends AppCompatActivity {
                 builder.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        //DELETE
+                        //DELETE DA LINHA
                         ProdutoDAO produtoDao = new ProdutoDAO(getBaseContext());
                         produtoDao.delete(produtoClicado.getId());
-
                         //
                         adapterProdutos.remove(produtoClicado);
                         adapterProdutos.notifyDataSetChanged();

@@ -43,9 +43,6 @@ public class ProdutoDAO {
                 ProdutoEntity._ID + "=" + id , null) > 0;
     }
 
-
-
-
     public List<Produto> listar(){
         List<Produto> produtos = new ArrayList<>();
         Cursor cursor = dbGateway.getDataBase().rawQuery(SQL_LISTAR_TODOS,null);
